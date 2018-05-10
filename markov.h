@@ -7,6 +7,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <sstream>
+#include <fstream>
+#include <iterator>
 
 template<class T>
 class Markov{
@@ -22,9 +25,8 @@ public:
 
     Markov(std::initializer_list<T> l){
         start_state=*l.begin();
-        train(l);
+        train(static_cast<std::vector<T>>(l));
     }
-
 
 
     void train(std::vector<T> dataset){
@@ -39,6 +41,27 @@ public:
             matrix[stato][word]++;
             stato=word;
         }
+    }
+
+    void train(std::string data_){
+
+        std::istringstream data(data_);
+        std::string line;
+        std::vector<std::string> dataset;
+
+        while (std::getline(data, line))
+        {
+            std::istringstream iss(line);
+            std::vector<std::string> tokens{std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}};
+
+            dataset.push_back("^");
+            for(auto word: tokens){
+                dataset.push_back(word);
+            }
+            dataset.push_back("$");
+        }
+
+        train(dataset);
     }
 
 
@@ -162,7 +185,3 @@ public:
 
 
 #endif // MARKOV_H
-
-
-
-
