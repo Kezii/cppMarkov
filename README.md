@@ -41,30 +41,6 @@ Output: `lololololololololololololololo`
 
 
 ```c++
-
-std::vector<std::string> string_to_vector(std::string data_){
-    std::istringstream data(data_);
-    std::string line;
-    std::vector<std::string> dataset;
-
-    while (std::getline(data, line))
-    {
-        std::istringstream iss(line);
-        std::vector<string> tokens{istream_iterator<string>{iss}, istream_iterator<string>{}};
-
-        dataset.push_back("^");
-        for(auto word: tokens){
-            dataset.push_back(word);
-        }
-        dataset.push_back("$");
-    }
-
-    return dataset;
-}
-
-
-//----------
-
 std::string data=R"(Nel mezzo del cammin di nostra vita
 mi ritrovai per una selva oscura,
 ché la diritta via era smarrita.
@@ -85,12 +61,10 @@ vestite già de' raggi del pianeta
 che mena dritto altrui per ogne calle.)";
 
 
-auto dataset=string_to_vector(data);
-
 
 Markov<std::string> markov;
 
-markov.train(dataset);
+markov.train(data);
 markov.set_start_state("^"); //special charachters for line begin/end
 markov.set_stop_state("$");
 
